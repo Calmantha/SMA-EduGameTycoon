@@ -1,0 +1,1915 @@
+<!DOCTYPE html>
+<html lang="id" class="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>EduRealm: Study Tycoon — Belajar & Bangun Pulau Ilmu</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Google Fonts: Plus Jakarta Sans & JetBrains Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <!-- Font Awesome untuk Ikon UI -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+            mono: ['"JetBrains Mono"', 'monospace'],
+          },
+          colors: {
+            slateDark: '#1e1b4b',
+            cardDark: '#2e1065',
+            borderDark: '#4c1d95',
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    /* Custom Scrollbar & Animasi Halus */
+    body {
+      background: linear-gradient(180deg, #0ea5e9 0%, #38bdf8 35%, #7dd3fc 70%, #e0f2fe 100%);
+      color: #0f172a;
+      overflow-x: hidden;
+      min-height: 100vh;
+    }
+
+    /* Gradasi Ungu ke Biru untuk Navbar dan Kartu UI */
+    .purple-blue-navbar {
+      background: linear-gradient(90deg, rgba(88, 28, 135, 0.92) 0%, rgba(67, 56, 202, 0.92) 50%, rgba(3, 105, 161, 0.92) 100%);
+    }
+    .purple-blue-panel {
+      background: linear-gradient(145deg, rgba(76, 29, 149, 0.90) 0%, rgba(49, 46, 129, 0.90) 52%, rgba(12, 74, 110, 0.90) 100%);
+    }
+    .purple-blue-subbox {
+      background: linear-gradient(135deg, rgba(46, 16, 101, 0.72) 0%, rgba(30, 58, 138, 0.72) 100%);
+    }
+
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: rgba(14, 165, 233, 0.15);
+    }
+    ::-webkit-scrollbar-thumb {
+      background: rgba(2, 132, 199, 0.45);
+      border-radius: 999px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: rgba(2, 132, 199, 0.7);
+    }
+
+    /* Animasi Awan Melayang di Background Utama (Gaya Zenonia / Guardian Tales) */
+    @keyframes cloudDriftSlow {
+      0% { transform: translateX(-180px); }
+      100% { transform: translateX(calc(100vw + 220px)); }
+    }
+    @keyframes cloudDriftFast {
+      0% { transform: translateX(-220px); }
+      100% { transform: translateX(calc(100vw + 250px)); }
+    }
+    @keyframes sunRotate {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    @keyframes sunPulse {
+      0%, 100% { transform: scale(1); opacity: 0.9; }
+      50% { transform: scale(1.08); opacity: 1; }
+    }
+    @keyframes waterfallFlow {
+      0% { stroke-dashoffset: 24; }
+      100% { stroke-dashoffset: 0; }
+    }
+    @keyframes birdFly {
+      0% { transform: translate(-40px, 10px) scale(0.8); opacity: 0; }
+      15% { opacity: 0.85; }
+      50% { transform: translate(230px, -12px) scale(1); }
+      85% { opacity: 0.85; }
+      100% { transform: translate(520px, 6px) scale(0.85); opacity: 0; }
+    }
+
+    .bg-cloud-1 { animation: cloudDriftSlow 58s linear infinite; }
+    .bg-cloud-2 { animation: cloudDriftFast 42s linear infinite; animation-delay: -18s; }
+    .bg-cloud-3 { animation: cloudDriftSlow 70s linear infinite; animation-delay: -35s; }
+    .sun-rays-spin { animation: sunRotate 40s linear infinite; transform-origin: center; }
+    .sun-core-pulse { animation: sunPulse 4s ease-in-out infinite; transform-origin: center; }
+    .waterfall-anim { stroke-dasharray: 6 6; animation: waterfallFlow 1.1s linear infinite; }
+    .fantasy-bird-1 { animation: birdFly 16s ease-in-out infinite; }
+    .fantasy-bird-2 { animation: birdFly 21s ease-in-out infinite; animation-delay: -9s; }
+
+    /* Animasi Pulau Melayang */
+    @keyframes islandFloat {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-9px); }
+    }
+    .island-float {
+      animation: islandFloat 4.8s ease-in-out infinite;
+    }
+
+    /* Animasi Partikel & Kristal Berpendar */
+    @keyframes pulseGlow {
+      0%, 100% { opacity: 0.55; transform: scale(1); }
+      50% { opacity: 1; transform: scale(1.28); }
+    }
+    .particle-glow {
+      animation: pulseGlow 2.6s ease-in-out infinite;
+      transform-origin: center;
+    }
+
+    /* Animasi Floating Reward (+Koin & +Energi) */
+    @keyframes floatUpFade {
+      0% {
+        opacity: 0;
+        transform: translateY(12px) scale(0.85);
+      }
+      20% {
+        opacity: 1;
+        transform: translateY(0px) scale(1.05);
+      }
+      80% {
+        opacity: 1;
+        transform: translateY(-28px) scale(1);
+      }
+      100% {
+        opacity: 0;
+        transform: translateY(-45px) scale(0.95);
+      }
+    }
+    .floating-reward {
+      animation: floatUpFade 1.4s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+      pointer-events: none;
+    }
+
+    /* Animasi Pop saat Upgrade Bangunan */
+    @keyframes buildingPop {
+      0% { transform: scale(0.88); }
+      50% { transform: scale(1.08); }
+      100% { transform: scale(1); }
+    }
+    .building-upgrade-pop {
+      animation: buildingPop 0.45s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    /* Efek Interaktif Slot SVG */
+    .iso-slot {
+      cursor: pointer;
+      transition: filter 0.2s ease, transform 0.2s ease;
+    }
+    .iso-slot:hover {
+      filter: drop-shadow(0 0 12px rgba(250, 204, 21, 0.85));
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col text-slate-100 selection:bg-amber-400/30 selection:text-amber-100 relative">
+
+  <!-- ================= BACKGROUND LANGIT BIRU, MATAHARI & AWAN BERANIMASI ================= -->
+  <div aria-hidden="true" class="fixed inset-0 pointer-events-none z-0 overflow-hidden">
+    <!-- Gradien Langit RPG Cerah -->
+    <div class="absolute inset-0 bg-gradient-to-b from-sky-500 via-sky-400 to-sky-100"></div>
+
+    <!-- Matahari Bersinar di Pojok Kanan Atas -->
+    <div class="absolute -top-12 right-6 sm:right-16 w-48 h-48 sm:w-64 sm:h-64 opacity-95">
+      <svg viewBox="0 0 200 200" class="w-full h-full">
+        <defs>
+          <radialGradient id="bgSunGlow" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stop-color="#fef08a" stop-opacity="1" />
+            <stop offset="45%" stop-color="#fde047" stop-opacity="0.55" />
+            <stop offset="100%" stop-color="#fef08a" stop-opacity="0" />
+          </radialGradient>
+        </defs>
+        <circle cx="100" cy="100" r="95" fill="url(#bgSunGlow)" class="sun-core-pulse" />
+        <g class="sun-rays-spin" stroke="#fef9c3" stroke-width="3" stroke-linecap="round" opacity="0.55">
+          <line x1="100" y1="12" x2="100" y2="30" />
+          <line x1="100" y1="170" x2="100" y2="188" />
+          <line x1="12" y1="100" x2="30" y2="100" />
+          <line x1="170" y1="100" x2="188" y2="100" />
+          <line x1="38" y1="38" x2="51" y2="51" />
+          <line x1="149" y1="149" x2="162" y2="162" />
+          <line x1="162" y1="38" x2="149" y2="51" />
+          <line x1="51" y1="149" x2="38" y2="162" />
+        </g>
+        <circle cx="100" cy="100" r="36" fill="#fef08a" />
+        <circle cx="100" cy="100" r="28" fill="#ffffff" opacity="0.85" />
+      </svg>
+    </div>
+
+    <!-- Gugusan Awan Putih Beranimasi (Gaya Pixel/Vector RPG) -->
+    <div class="bg-cloud-1 absolute top-14 left-0 opacity-90">
+      <svg width="210" height="75" viewBox="0 0 210 75" fill="none">
+        <path d="M35 60H175C191.569 60 205 48.8071 205 35C205 22.1424 193.364 11.5515 178.423 10.1563C172.149 4.02235 162.825 0 152.3 0C138.898 0 127.272 6.53564 121.656 16.054C116.298 13.4557 110.123 12 103.5 12C85.7589 12 70.9854 22.4238 67.3818 36.2654C63.6941 34.8124 59.5892 34 55.25 34C38.5434 34 25 45.1929 25 59C25 59.336 25.008 59.6694 25.0239 60H35Z" fill="white" fill-opacity="0.88"/>
+      </svg>
+    </div>
+
+    <div class="bg-cloud-2 absolute top-36 left-0 opacity-75">
+      <svg width="170" height="60" viewBox="0 0 210 75" fill="none">
+        <path d="M35 60H175C191.569 60 205 48.8071 205 35C205 22.1424 193.364 11.5515 178.423 10.1563C172.149 4.02235 162.825 0 152.3 0C138.898 0 127.272 6.53564 121.656 16.054C116.298 13.4557 110.123 12 103.5 12C85.7589 12 70.9854 22.4238 67.3818 36.2654C63.6941 34.8124 59.5892 34 55.25 34C38.5434 34 25 45.1929 25 59C25 59.336 25.008 59.6694 25.0239 60H35Z" fill="white" fill-opacity="0.8"/>
+      </svg>
+    </div>
+
+    <div class="bg-cloud-3 absolute bottom-24 left-0 opacity-65">
+      <svg width="260" height="90" viewBox="0 0 210 75" fill="none">
+        <path d="M35 60H175C191.569 60 205 48.8071 205 35C205 22.1424 193.364 11.5515 178.423 10.1563C172.149 4.02235 162.825 0 152.3 0C138.898 0 127.272 6.53564 121.656 16.054C116.298 13.4557 110.123 12 103.5 12C85.7589 12 70.9854 22.4238 67.3818 36.2654C63.6941 34.8124 59.5892 34 55.25 34C38.5434 34 25 45.1929 25 59C25 59.336 25.008 59.6694 25.0239 60H35Z" fill="white" fill-opacity="0.75"/>
+      </svg>
+    </div>
+
+    <!-- Pegunungan Awan Lembut di Horizon Bawah -->
+    <div class="absolute bottom-0 inset-x-0 h-32 bg-gradient-to-t from-white/70 via-sky-100/40 to-transparent"></div>
+  </div>
+
+  <!-- Container Animasi Reward Melayang -->
+  <div id="floating-rewards-layer" class="fixed inset-0 pointer-events-none z-50 overflow-hidden"></div>
+
+  <!-- Toast Notifikasi / Konfirmasi Pengganti alert() & confirm() -->
+  <div id="toast-container" class="fixed bottom-12 right-4 z-50 flex flex-col gap-2 max-w-sm"></div>
+
+  <!-- Modal Konfirmasi Reset -->
+  <div id="reset-modal" class="fixed inset-0 z-50 hidden items-center justify-center bg-slate-950/80 backdrop-blur-sm p-4">
+    <div class="bg-cardDark border border-borderDark rounded-2xl max-w-md w-full p-6 shadow-2xl">
+      <div class="flex items-center gap-3 text-amber-400 mb-3">
+        <div class="w-10 h-10 rounded-xl bg-amber-500/10 border border-amber-500/30 flex items-center justify-center">
+          <i class="fa-solid fa-triangle-exclamation text-lg"></i>
+        </div>
+        <h3 class="text-lg font-bold text-white">Reset Semua Progres?</h3>
+      </div>
+      <p class="text-sm text-slate-300 leading-relaxed mb-6">
+        Semua Koin, Energi, level bangunan di pulau, dan riwayat pengerjaan soal akan dikembalikan ke awal. Tindakan ini tidak bisa dibatalkan.
+      </p>
+      <div class="flex justify-end gap-3">
+        <button onclick="closeResetModal()" class="px-4 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-sm font-semibold transition">
+          Batal
+        </button>
+        <button onclick="confirmResetProgress()" class="px-4 py-2.5 rounded-xl bg-rose-600 hover:bg-rose-500 text-white text-sm font-semibold shadow-lg shadow-rose-600/20 transition">
+          Ya, Reset Pulau
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= HEADER / TOP BAR ================= -->
+  <header class="sticky top-0 z-30 purple-blue-navbar backdrop-blur-md border-b border-purple-300/35 px-4 lg:px-8 py-3 shadow-lg shadow-indigo-950/25">
+    <div class="max-w-[1600px] mx-auto flex flex-wrap items-center justify-between gap-3">
+      
+      <!-- Brand Logo & Judul -->
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-fuchsia-500 via-indigo-600 to-sky-500 flex items-center justify-center shadow-lg shadow-purple-500/30">
+          <i class="fa-solid fa-cubes text-white text-lg"></i>
+        </div>
+        <div>
+          <div class="flex items-center gap-2">
+            <h1 class="font-extrabold text-base sm:text-lg tracking-tight bg-gradient-to-r from-white via-purple-200 to-sky-200 bg-clip-text text-transparent">
+              EduRealm: Study Tycoon
+            </h1>
+            <span class="hidden sm:inline-block text-[10px] font-mono uppercase tracking-wider px-2 py-0.5 rounded-full bg-purple-400/20 text-purple-200 border border-purple-300/30">
+              SMA Edition
+            </span>
+          </div>
+          <p class="text-xs text-indigo-200 hidden sm:block">Pahami konsep, kumpulkan resource, bangun pulau ilmumu.</p>
+        </div>
+      </div>
+
+      <!-- Pilihan Mata Pelajaran (Tabs) -->
+      <nav aria-label="Pilih Mata Pelajaran" class="order-3 md:order-2 w-full md:w-auto flex items-center purple-blue-subbox p-1 rounded-xl border border-indigo-300/30">
+        <button onclick="selectSubject('matematika')" id="subj-btn-matematika" class="subj-tab flex-1 md:flex-initial flex items-center justify-center gap-2 px-3.5 py-2 rounded-lg text-xs sm:text-sm font-semibold transition">
+          <i class="fa-solid fa-square-root-variable text-cyan-300"></i>
+          <span>Matematika</span>
+        </button>
+        <button onclick="selectSubject('fisika')" id="subj-btn-fisika" class="subj-tab flex-1 md:flex-initial flex items-center justify-center gap-2 px-3.5 py-2 rounded-lg text-xs sm:text-sm font-semibold transition">
+          <i class="fa-solid fa-atom text-amber-300"></i>
+          <span>Fisika</span>
+        </button>
+        <button onclick="selectSubject('biologi')" id="subj-btn-biologi" class="subj-tab flex-1 md:flex-initial flex items-center justify-center gap-2 px-3.5 py-2 rounded-lg text-xs sm:text-sm font-semibold transition">
+          <i class="fa-solid fa-dna text-emerald-300"></i>
+          <span>Biologi</span>
+        </button>
+      </nav>
+
+      <!-- Resource Indicators & Utility Buttons -->
+      <div class="order-2 md:order-3 flex items-center gap-2 sm:gap-3">
+        <!-- Gold / Koin -->
+        <div title="Koin Ilmu (Gold)" class="flex items-center gap-2 bg-amber-500/10 border border-amber-500/30 px-3 py-1.5 rounded-xl">
+          <i class="fa-solid fa-coins text-amber-400 text-sm"></i>
+          <span id="stat-gold" class="font-mono font-bold text-sm text-amber-300">120</span>
+        </div>
+
+        <!-- Energy -->
+        <div title="Energi Riset" class="flex items-center gap-2 bg-cyan-500/10 border border-cyan-500/30 px-3 py-1.5 rounded-xl">
+          <i class="fa-solid fa-bolt text-cyan-400 text-sm"></i>
+          <span id="stat-energy" class="font-mono font-bold text-sm text-cyan-300">80</span>
+        </div>
+
+        <!-- Level Pulau -->
+        <div title="Level Markas Pulau" class="hidden sm:flex items-center gap-2 bg-purple-500/10 border border-purple-500/30 px-3 py-1.5 rounded-xl">
+          <i class="fa-solid fa-island-tropical text-purple-400 text-sm"></i>
+          <span class="text-xs text-purple-200">Lv.</span>
+          <span id="stat-island-lv" class="font-mono font-bold text-sm text-purple-300">1</span>
+        </div>
+
+        <!-- Streak -->
+        <div title="Combo / Streak Belajar" class="hidden lg:flex items-center gap-1.5 bg-orange-500/10 border border-orange-500/30 px-3 py-1.5 rounded-xl">
+          <i class="fa-solid fa-fire text-orange-400 text-sm"></i>
+          <span id="stat-streak" class="font-mono font-bold text-sm text-orange-300">1</span>
+        </div>
+
+        <!-- Sound Toggle -->
+        <button onclick="toggleSound()" id="sound-btn" title="Suara Efek (M)" class="w-9 h-9 rounded-xl bg-indigo-950/70 hover:bg-purple-800/80 border border-indigo-300/30 flex items-center justify-center text-indigo-200 transition">
+          <i id="sound-icon" class="fa-solid fa-volume-high text-sm"></i>
+        </button>
+
+        <!-- Reset Button -->
+        <button onclick="openResetModal()" title="Reset Progres" class="w-9 h-9 rounded-xl bg-indigo-950/70 hover:bg-rose-900/70 hover:border-rose-400/50 border border-indigo-300/30 flex items-center justify-center text-indigo-200 hover:text-rose-200 transition">
+          <i class="fa-solid fa-rotate-left text-sm"></i>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- ================= MAIN SPLIT-SCREEN WORKSPACE ================= -->
+  <main class="relative z-10 flex-1 max-w-[1600px] w-full mx-auto p-4 lg:p-6 grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+
+    <!-- ==================== SISI KIRI (60% -> 7/12 Kolom): AREA BELAJAR & LATIHAN ==================== -->
+    <section class="lg:col-span-7 flex flex-col gap-4">
+      
+      <!-- Header Sub-bab & Progress Bar -->
+      <div class="purple-blue-panel backdrop-blur-md border border-purple-300/35 rounded-2xl p-4 sm:p-5 shadow-xl shadow-indigo-950/25">
+        <div class="flex flex-wrap items-center justify-between gap-3 mb-3">
+          <div>
+            <span id="subject-badge" class="inline-flex items-center gap-1.5 text-xs font-semibold px-2.5 py-1 rounded-lg bg-cyan-500/10 text-cyan-400 border border-cyan-500/30 mb-1.5">
+              Matematika • Aljabar & Kalkulus Dasar
+            </span>
+            <h2 id="module-title" class="text-base sm:text-lg font-bold text-white">
+              Aljabar & Kalkulus Dasar
+            </h2>
+          </div>
+
+          <!-- Switch Mode Tab: Materi Ringkas vs Latihan Soal -->
+          <div class="flex items-center purple-blue-subbox p-1 rounded-xl border border-indigo-300/30">
+            <button onclick="switchStudyMode('materi')" id="mode-btn-materi" class="px-3.5 py-2 rounded-lg text-xs sm:text-sm font-semibold flex items-center gap-2 transition">
+              <i class="fa-solid fa-book-open"></i>
+              <span>Materi Ringkas</span>
+            </button>
+            <button onclick="switchStudyMode('kuis')" id="mode-btn-kuis" class="px-3.5 py-2 rounded-lg text-xs sm:text-sm font-semibold flex items-center gap-2 transition">
+              <i class="fa-solid fa-gamepad"></i>
+              <span>Latihan Soal</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Progress Bar Sub-bab -->
+        <div class="mt-3">
+          <div class="flex justify-between text-xs text-indigo-200 mb-1.5">
+            <span id="progress-label">Progres Penguasaan Bab: 0%</span>
+            <span id="bonus-multiplier-label" class="font-mono text-emerald-300">Bonus Riset: +0% Koin | +0% Energi</span>
+          </div>
+          <div class="w-full h-2.5 bg-indigo-950/80 rounded-full overflow-hidden border border-indigo-400/25">
+            <div id="subject-progress-bar" class="h-full bg-gradient-to-r from-fuchsia-400 via-cyan-400 to-amber-300 transition-all duration-500 rounded-full" style="width: 0%"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- KONTEN MODE 1: MATERI RINGKAS -->
+      <div id="view-materi" class="flex flex-col gap-4">
+        <div id="materi-cards-container" class="grid grid-cols-1 gap-4"></div>
+      </div>
+
+      <!-- KONTEN MODE 2: LATIHAN SOAL INTERAKTIF -->
+      <div id="view-kuis" class="hidden flex-col gap-4">
+        <div class="purple-blue-panel backdrop-blur-md border border-purple-300/35 rounded-2xl p-5 sm:p-6 shadow-xl shadow-indigo-950/25">
+          
+          <!-- Top Bar Soal -->
+          <div class="flex flex-wrap items-center justify-between gap-3 pb-4 mb-5 border-b border-indigo-300/25">
+            <div class="flex items-center gap-2.5">
+              <span id="quiz-number-badge" class="px-3 py-1 rounded-lg purple-blue-subbox text-cyan-300 font-mono text-xs font-bold border border-indigo-300/30">
+                Soal 1 / 4
+              </span>
+              <span id="quiz-difficulty-badge" class="px-2.5 py-1 rounded-lg bg-emerald-500/15 text-emerald-300 text-xs font-medium border border-emerald-400/30">
+                Konsep Dasar
+              </span>
+            </div>
+
+            <div class="flex items-center gap-2">
+              <!-- Tombol Petunjuk (Hint) -->
+              <button onclick="useCrystalHint()" id="hint-btn" class="px-3 py-1.5 rounded-xl bg-purple-500/20 hover:bg-purple-500/30 border border-purple-300/40 text-purple-200 text-xs font-semibold flex items-center gap-1.5 transition">
+                <i class="fa-solid fa-gem"></i>
+                <span id="hint-btn-text">Hint Perpustakaan</span>
+              </button>
+
+              <!-- Info Potensi Hadiah -->
+              <div class="hidden sm:flex items-center gap-2 text-xs font-mono purple-blue-subbox px-3 py-1.5 rounded-xl border border-indigo-300/30">
+                <span class="text-amber-300">+<span id="potential-gold">35</span> <i class="fa-solid fa-coins"></i></span>
+                <span class="text-indigo-300/50">|</span>
+                <span class="text-cyan-300">+<span id="potential-energy">25</span> <i class="fa-solid fa-bolt"></i></span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Kotak Hint -->
+          <div id="quiz-hint-box" class="hidden mb-4 p-3.5 rounded-xl bg-purple-950/40 border border-purple-500/40 text-purple-200 text-sm flex items-start gap-3">
+            <i class="fa-solid fa-wand-magic-sparkles text-purple-400 mt-0.5"></i>
+            <div>
+              <p class="font-semibold text-xs uppercase tracking-wider text-purple-300 mb-0.5">Petunjuk Arsip Kristal:</p>
+              <p id="quiz-hint-text" class="text-slate-200 leading-relaxed"></p>
+            </div>
+          </div>
+
+          <!-- Pertanyaan Soal -->
+          <div class="mb-6">
+            <p id="quiz-question-text" class="text-base sm:text-lg font-semibold text-white leading-relaxed">
+              Memuat soal...
+            </p>
+          </div>
+
+          <!-- Opsi Jawaban Pilihan Ganda -->
+          <div id="quiz-options-container" class="grid grid-cols-1 gap-3"></div>
+
+          <!-- Feedback & Pembahasan Singkat setelah Menjawab -->
+          <div id="quiz-feedback-box" class="hidden mt-6 p-4 sm:p-5 rounded-2xl border transition-all">
+            <div class="flex items-start gap-3">
+              <div id="quiz-feedback-icon" class="w-9 h-9 rounded-xl flex items-center justify-center shrink-0 mt-0.5"></div>
+              <div class="flex-1">
+                <h4 id="quiz-feedback-title" class="font-bold text-base mb-1"></h4>
+                <p id="quiz-explanation-text" class="text-sm text-slate-300 leading-relaxed mb-4"></p>
+                <div class="flex flex-wrap items-center justify-between gap-3">
+                  <span id="quiz-reward-summary" class="text-xs font-mono font-bold"></span>
+                  <button onclick="nextQuestion()" class="px-4 py-2.5 rounded-xl bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold text-sm flex items-center gap-2 shadow-lg shadow-cyan-500/20 transition">
+                    <span>Soal Berikutnya</span>
+                    <i class="fa-solid fa-arrow-right"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Footer Info Shortcut Keyboard -->
+          <div class="mt-5 pt-4 border-t border-indigo-300/20 flex items-center justify-between text-xs text-indigo-200/80">
+            <span><i class="fa-regular fa-keyboard mr-1.5"></i>Tips Laptop: Tekan tombol <kbd class="px-1.5 py-0.5 bg-indigo-950/80 text-indigo-100 rounded border border-indigo-400/30 font-mono">1</kbd>–<kbd class="px-1.5 py-0.5 bg-indigo-950/80 text-indigo-100 rounded border border-indigo-400/30 font-mono">4</kbd> untuk menjawab cepat</span>
+            <span id="quiz-solved-count" class="font-mono text-indigo-200">Terjawab: 0/4</span>
+          </div>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- ==================== SISI KANAN (40% -> 5/12 Kolom): DUNIA VIRTUAL / BASE BUILDER ==================== -->
+    <aside class="lg:col-span-5 flex flex-col gap-4 lg:sticky lg:top-20">
+      
+      <!-- Kanvas Pulau Isometrik 2D Interaktif -->
+      <div class="purple-blue-panel backdrop-blur-md border border-purple-300/40 rounded-2xl overflow-hidden shadow-2xl shadow-indigo-950/25 flex flex-col">
+        <!-- Header Pulau -->
+        <div class="px-4 py-3 bg-gradient-to-r from-purple-950/90 via-indigo-900/90 to-sky-900/90 border-b border-purple-300/30 flex items-center justify-between">
+          <div class="flex items-center gap-2">
+            <span class="w-2.5 h-2.5 rounded-full bg-amber-400 animate-pulse"></span>
+            <h3 class="font-bold text-sm text-white tracking-wide">Pulau Langit Aethelgard</h3>
+          </div>
+          <span id="island-rank-title" class="text-xs font-mono px-2.5 py-0.5 rounded-full bg-amber-400/15 text-amber-300 border border-amber-400/40">
+            Pos Perintis
+          </span>
+        </div>
+
+        <!-- Viewport SVG Isometrik (Tema Dunia Fantasi Zenonia / Guardian Tales) -->
+        <div class="relative w-full aspect-[4/3] bg-gradient-to-b from-[#0284c7] via-[#38bdf8] to-[#bae6fd] flex items-center justify-center overflow-hidden select-none">
+          
+          <!-- Kilau Cahaya Langit & Pelangi Fantasi -->
+          <div class="absolute -top-10 -right-10 w-44 h-44 rounded-full bg-amber-200/45 blur-xl pointer-events-none"></div>
+          <svg viewBox="0 0 500 380" class="absolute inset-0 w-full h-full pointer-events-none">
+            <!-- Pelangi Fantasi Transparan di Latar Belakang -->
+            <path d="M 40 260 A 210 180 0 0 1 460 260" fill="none" stroke="#f43f5e" stroke-width="5" opacity="0.14" />
+            <path d="M 46 260 A 204 174 0 0 1 454 260" fill="none" stroke="#facc15" stroke-width="5" opacity="0.14" />
+            <path d="M 52 260 A 198 168 0 0 1 448 260" fill="none" stroke="#34d399" stroke-width="5" opacity="0.14" />
+            <path d="M 58 260 A 192 162 0 0 1 442 260" fill="none" stroke="#38bdf8" stroke-width="5" opacity="0.14" />
+
+            <!-- Awan Latar Belakang dalam Viewport Pulau -->
+            <g opacity="0.85">
+              <ellipse cx="90" cy="72" rx="38" ry="14" fill="#ffffff" />
+              <ellipse cx="115" cy="68" rx="28" ry="12" fill="#ffffff" />
+              <ellipse cx="70" cy="75" rx="22" ry="10" fill="#f0f9ff" />
+            </g>
+            <g opacity="0.75">
+              <ellipse cx="405" cy="95" rx="44" ry="15" fill="#ffffff" />
+              <ellipse cx="380" cy="92" rx="26" ry="11" fill="#f0f9ff" />
+            </g>
+
+            <!-- Burung-burung Fantasi Melintas -->
+            <g class="fantasy-bird-1" stroke="#ffffff" stroke-width="2" fill="none" stroke-linecap="round">
+              <path d="M 0 60 Q 6 54 12 60 Q 18 54 24 60" />
+              <path d="M 28 72 Q 33 67 38 72 Q 43 67 48 72" />
+            </g>
+            <g class="fantasy-bird-2" stroke="#fef08a" stroke-width="1.8" fill="none" stroke-linecap="round">
+              <path d="M 0 110 Q 5 105 10 110 Q 15 105 20 110" />
+            </g>
+          </svg>
+
+          <!-- SVG Pulau Terapung Isometrik Fantasi -->
+          <svg id="isometric-island-svg" viewBox="0 0 500 380" class="relative z-10 w-full h-full max-h-[360px] island-float drop-shadow-[0_22px_24px_rgba(3,105,161,0.45)]">
+            <defs>
+              <!-- Gradien Rumput Zamrud Cerah -->
+              <linearGradient id="topGrassGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="#4ade80" />
+                <stop offset="50%" stop-color="#22c55e" />
+                <stop offset="100%" stop-color="#15803d" />
+              </linearGradient>
+              <!-- Gradien Tebing Tanah Hangat -->
+              <linearGradient id="cliffLeftGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+                <stop offset="0%" stop-color="#b45309" />
+                <stop offset="55%" stop-color="#78350f" />
+                <stop offset="100%" stop-color="#451a03" />
+              </linearGradient>
+              <linearGradient id="cliffRightGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+                <stop offset="0%" stop-color="#92400e" />
+                <stop offset="55%" stop-color="#5c2d16" />
+                <stop offset="100%" stop-color="#3b1d0e" />
+              </linearGradient>
+              <!-- Gradien Air Terjun Aether -->
+              <linearGradient id="waterfallGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+                <stop offset="0%" stop-color="#7dd3fc" stop-opacity="0.95" />
+                <stop offset="75%" stop-color="#38bdf8" stop-opacity="0.8" />
+                <stop offset="100%" stop-color="#e0f2fe" stop-opacity="0" />
+              </linearGradient>
+              <linearGradient id="crystalGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="#f0abfc" />
+                <stop offset="100%" stop-color="#9333ea" />
+              </linearGradient>
+              <linearGradient id="solarGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="#7dd3fc" />
+                <stop offset="100%" stop-color="#0284c7" />
+              </linearGradient>
+              <linearGradient id="goldDomeGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="#fef08a" />
+                <stop offset="100%" stop-color="#f59e0b" />
+              </linearGradient>
+            </defs>
+
+            <!-- Batu-batu Terapung Kecil di Sekitar Pulau Utama -->
+            <g class="particle-glow" style="animation-delay: 0.4s">
+              <polygon points="56,188 68,182 76,192 64,204" fill="#92400e" stroke="#4ade80" stroke-width="1" />
+              <polygon points="56,188 68,182 72,187 60,192" fill="#4ade80" />
+            </g>
+            <g class="particle-glow" style="animation-delay: 1.2s">
+              <polygon points="434,176 448,170 454,182 440,194" fill="#78350f" stroke="#4ade80" stroke-width="1" />
+              <polygon points="434,176 448,170 450,175 437,181" fill="#4ade80" />
+            </g>
+
+            <!-- Cincin Sihir / Aura di Bawah Pulau -->
+            <ellipse cx="250" cy="346" rx="115" ry="15" fill="#ffffff" opacity="0.35" />
+            <ellipse cx="250" cy="346" rx="82" ry="9" fill="none" stroke="#fef08a" stroke-width="1.5" stroke-dasharray="8,6" opacity="0.8" />
+
+            <!-- ===== BASE PULAU ISOMETRIK FANTASI ===== -->
+            <polygon points="75,205 250,295 250,336 105,248" fill="url(#cliffLeftGrad)" stroke="#d97706" stroke-width="0.9" />
+            <polygon points="425,205 250,295 250,336 395,248" fill="url(#cliffRightGrad)" stroke="#b45309" stroke-width="0.9" />
+            
+            <!-- Kristal Aether Inti di Dasar Pulau -->
+            <polygon points="236,312 250,352 264,312 250,298" fill="#38bdf8" stroke="#e0f2fe" stroke-width="1.2" />
+            <polygon points="244,314 250,342 256,314" fill="#bae6fd" opacity="0.85" />
+
+            <!-- Permukaan Atas Pulau -->
+            <polygon points="250,115 425,205 250,295 75,205" fill="url(#topGrassGrad)" stroke="#bbf7d0" stroke-width="2" />
+
+            <!-- Kolam Mata Air & Air Terjun Aether di Tebing Kiri -->
+            <ellipse cx="145" cy="232" rx="18" ry="9" fill="#38bdf8" stroke="#e0f2fe" stroke-width="1.2" />
+            <path d="M 134 236 L 134 298 L 152 308 L 152 242 Z" fill="url(#waterfallGrad)" />
+            <line x1="140" y1="240" x2="140" y2="296" stroke="#ffffff" stroke-width="1.8" class="waterfall-anim" />
+            <line x1="147" y1="244" x2="147" y2="302" stroke="#e0f2fe" stroke-width="1.5" class="waterfall-anim" />
+
+            <!-- Jalur Setapak Batu Emas & Kristal -->
+            <polygon points="250,155 340,205 250,255 160,205" fill="none" stroke="#fef9c3" stroke-width="3" stroke-dasharray="7,5" opacity="0.7" />
+
+            <!-- Pohon Fantasi Mini Dekoratif di Sudut Pulau -->
+            <g>
+              <rect x="108" y="192" width="4" height="10" fill="#78350f" />
+              <circle cx="110" cy="187" r="9" fill="#16a34a" />
+              <circle cx="108" cy="185" r="5" fill="#86efac" />
+            </g>
+            <g>
+              <rect x="388" y="192" width="4" height="10" fill="#78350f" />
+              <circle cx="390" cy="187" r="9" fill="#15803d" />
+              <circle cx="388" cy="185" r="5" fill="#86efac" />
+            </g>
+
+            <!-- ===== SLOT 4 (BAWAH / DEPAN): TAMAN FUTURISTIK & MONUMEN ===== -->
+            <g id="svg-slot-garden" class="iso-slot" onclick="focusBuildingCard('garden')">
+              <polygon points="250,222 308,252 250,282 192,252" fill="#15803d" stroke="#bbf7d0" stroke-width="1.5" />
+              <g id="svg-garden-art"></g>
+            </g>
+
+            <!-- ===== SLOT 2 (KIRI): REAKTOR ENERGI SURYA ===== -->
+            <g id="svg-slot-reactor" class="iso-slot" onclick="focusBuildingCard('reactor')">
+              <polygon points="155,175 210,203 155,231 100,203" fill="#0f172a" stroke="#7dd3fc" stroke-width="1.5" />
+              <g id="svg-reactor-art"></g>
+            </g>
+
+            <!-- ===== SLOT 3 (KANAN): PERPUSTAKAAN KRISTAL ===== -->
+            <g id="svg-slot-library" class="iso-slot" onclick="focusBuildingCard('library')">
+              <polygon points="345,175 400,203 345,231 290,203" fill="#1e1b4b" stroke="#e879f9" stroke-width="1.5" />
+              <g id="svg-library-art"></g>
+            </g>
+
+            <!-- ===== SLOT 1 (ATAS / PUNCAK): MENARA OBSERVATORIUM ===== -->
+            <g id="svg-slot-observatory" class="iso-slot" onclick="focusBuildingCard('observatory')">
+              <polygon points="250,128 310,159 250,190 190,159" fill="#1e293b" stroke="#fde047" stroke-width="1.6" />
+              <g id="svg-observatory-art"></g>
+            </g>
+
+            <!-- Partikel Cahaya Melayang (Peri / Mana Orb) -->
+            <g id="svg-ambient-particles"></g>
+          </svg>
+
+          <!-- Overlay Info Bangunan Terpilih di Pojok Bawah Kanvas -->
+          <div id="island-selected-banner" class="z-20 absolute bottom-3 left-3 right-3 purple-blue-navbar backdrop-blur-md border border-purple-300/35 rounded-xl px-3.5 py-2 flex items-center justify-between text-xs shadow-lg">
+            <span id="island-hover-info" class="text-purple-100"><i class="fa-solid fa-computer-mouse text-amber-300 mr-1.5"></i>Arahkan mouse ke bangunan pulau atau tekan <kbd class="px-1.5 py-0.5 bg-indigo-950 rounded border border-indigo-400/40 font-mono text-[10px]">F1</kbd>–<kbd class="px-1.5 py-0.5 bg-indigo-950 rounded border border-indigo-400/40 font-mono text-[10px]">F4</kbd> untuk upgrade.</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Panel Daftar Bangunan & Upgrade -->
+      <div class="purple-blue-panel backdrop-blur-md border border-purple-300/35 rounded-2xl p-4 shadow-xl shadow-indigo-950/25">
+        <div class="flex items-center justify-between mb-3">
+          <h3 class="font-bold text-sm text-white flex items-center gap-2">
+            <i class="fa-solid fa-hammer text-amber-300"></i>
+            <span>Infrastruktur & Dekorasi Pulau</span>
+          </h3>
+          <span class="text-[11px] text-indigo-200">Auto-save aktif</span>
+        </div>
+
+        <!-- Grid 4 Kartu Bangunan -->
+        <div id="buildings-list-container" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-2.5"></div>
+      </div>
+
+    </aside>
+
+  </main>
+
+  <!-- ================= PC / DESKTOP KEYBOARD CONTROL BAR ================= -->
+  <footer class="relative z-20 mt-auto border-t border-purple-300/30 purple-blue-navbar backdrop-blur-md px-4 lg:px-8 py-2.5 text-[11px] text-indigo-100">
+    <div class="max-w-[1600px] mx-auto flex flex-wrap items-center justify-between gap-2">
+      <div class="flex items-center gap-2 font-semibold text-amber-300">
+        <i class="fa-solid fa-desktop"></i>
+        <span>Kontrol PC & Keyboard:</span>
+      </div>
+      <div class="flex flex-wrap items-center gap-x-4 gap-y-1 text-indigo-100/90">
+        <span><kbd class="px-1.5 py-0.5 bg-indigo-950/90 rounded border border-indigo-400/30 font-mono">Alt+1/2/3</kbd> Mata Pelajaran</span>
+        <span><kbd class="px-1.5 py-0.5 bg-indigo-950/90 rounded border border-indigo-400/30 font-mono">Q</kbd>/<kbd class="px-1.5 py-0.5 bg-indigo-950/90 rounded border border-indigo-400/30 font-mono">E</kbd> Materi / Kuis</span>
+        <span><kbd class="px-1.5 py-0.5 bg-indigo-950/90 rounded border border-indigo-400/30 font-mono">1–4</kbd> / <kbd class="px-1.5 py-0.5 bg-indigo-950/90 rounded border border-indigo-400/30 font-mono">A–D</kbd> Jawab Soal</span>
+        <span><kbd class="px-1.5 py-0.5 bg-indigo-950/90 rounded border border-indigo-400/30 font-mono">H</kbd> Hint</span>
+        <span><kbd class="px-1.5 py-0.5 bg-indigo-950/90 rounded border border-indigo-400/30 font-mono">Enter</kbd> Lanjut</span>
+        <span><kbd class="px-1.5 py-0.5 bg-indigo-950/90 rounded border border-indigo-400/30 font-mono">F1–F4</kbd> Upgrade Pulau</span>
+        <span><kbd class="px-1.5 py-0.5 bg-indigo-950/90 rounded border border-indigo-400/30 font-mono">M</kbd> Suara</span>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // =========================================================================
+    // 1. DATABASE KURIKULUM SMA (MATERI RINGKAS & LATIHAN SOAL)
+    // =========================================================================
+    const CURRICULUM_DATA = {
+      matematika: {
+        name: "Matematika",
+        subtopic: "Aljabar, Eksponen & Turunan Dasar",
+        accent: "cyan",
+        materi: [
+          {
+            id: "mat-m1",
+            title: "1. Sifat Eksponen & Logaritma",
+            tag: "Konsep Fundamental",
+            summary: "Eksponen menyatakan perkalian berulang suatu bilangan pokok (basis). Dalam pemodelan pertumbuhan populasi atau peluruhan radioaktif di SMA, memahami sifat pangkat sangat krusial sebelum masuk ke persamaan eksponensial dan logaritma.",
+            formula: "a^m × a^n = a^(m+n)   |   (a^m)^n = a^(m·n)   |   a^log(b) = c ⇔ a^c = b",
+            rewardGold: 45,
+            rewardEnergy: 30
+          },
+          {
+            id: "mat-m2",
+            title: "2. Turunan Fungsi Aljabar (Diferensial)",
+            tag: "Kalkulus Dasar",
+            summary: "Turunan pertama fungsi f(x) mengukur laju perubahan sesaat atau gradien garis singgung kurva pada titik tertentu. Konsep ini dipakai untuk mencari nilai maksimum/minimum dalam masalah optimasi.",
+            formula: "Jika f(x) = a·x^n, maka f'(x) = a·n·x^(n−1)",
+            rewardGold: 55,
+            rewardEnergy: 35
+          }
+        ],
+        quiz: [
+          {
+            id: "mat-q1",
+            difficulty: "Konsep Dasar",
+            question: "Jika f(x) = 3x⁴ − 2x² + 7x − 5, maka turunan pertama f'(x) adalah...",
+            options: [
+              "12x³ − 4x + 7",
+              "12x³ − 2x + 7",
+              "3x³ − 4x + 7",
+              "12x⁴ − 4x² + 7"
+            ],
+            correctIndex: 0,
+            hint: "Kalikan pangkat dengan koefisien di depannya, lalu kurangi pangkatnya dengan 1. Turunan konstanta (-5) adalah 0.",
+            explanation: "f'(x) = (3·4)x³ − (2·2)x¹ + 7(1)x⁰ − 0 = 12x³ − 4x + 7.",
+            baseGold: 35,
+            baseEnergy: 25
+          },
+          {
+            id: "mat-q2",
+            difficulty: "Aljabar Eksponen",
+            question: "Nilai x yang memenuhi persamaan eksponen 2^(3x − 1) = 32 adalah...",
+            options: [
+              "x = 1",
+              "x = 2",
+              "x = 3",
+              "x = 4"
+            ],
+            correctIndex: 1,
+            hint: "Ubah angka 32 menjadi bentuk bilangan berpangkat dengan basis 2 (32 = 2^5).",
+            explanation: "Karena 32 = 2⁵, maka 2^(3x − 1) = 2⁵ ⇒ 3x − 1 = 5 ⇒ 3x = 6 ⇒ x = 2.",
+            baseGold: 40,
+            baseEnergy: 25
+          },
+          {
+            id: "mat-q3",
+            difficulty: "Barisan & Deret",
+            question: "Diketahui barisan aritmetika dengan suku pertama a = 4 dan beda b = 3. Suku ke-10 (U₁₀) barisan tersebut adalah...",
+            options: [
+              "28",
+              "30",
+              "31",
+              "34"
+            ],
+            correctIndex: 2,
+            hint: "Gunakan rumus suku ke-n barisan aritmetika: Un = a + (n − 1)b.",
+            explanation: "U₁₀ = 4 + (10 − 1)·3 = 4 + 27 = 31.",
+            baseGold: 35,
+            baseEnergy: 30
+          },
+          {
+            id: "mat-q4",
+            difficulty: "Aplikasi Optimasi",
+            question: "Sebuah peluru ditembakkan vertikal ke atas dengan ketinggian h(t) = 40t − 5t² (dalam meter). Tinggi maksimum yang dicapai peluru adalah...",
+            options: [
+              "60 meter",
+              "75 meter",
+              "80 meter",
+              "100 meter"
+            ],
+            correctIndex: 2,
+            hint: "Tinggi maksimum tercapai saat kecepatan sesaat h'(t) = 0. Cari nilai t terlebih dahulu, lalu substitusikan ke h(t).",
+            explanation: "h'(t) = 40 − 10t = 0 ⇒ t = 4 detik. Tinggi maksimum: h(4) = 40(4) − 5(4)² = 160 − 80 = 80 meter.",
+            baseGold: 50,
+            baseEnergy: 35
+          }
+        ]
+      },
+
+      fisika: {
+        name: "Fisika",
+        subtopic: "Dinamika Gerak, Usaha & Energi",
+        accent: "amber",
+        materi: [
+          {
+            id: "fis-m1",
+            title: "1. Hukum II Newton & Dinamika Partikel",
+            tag: "Mekanika Klasik",
+            summary: "Percepatan yang dialami suatu benda berbanding lurus dengan resultan gaya yang bekerja padanya dan berbanding terbalik dengan massa benda tersebut. Arah percepatan selalu searah dengan resultan gaya.",
+            formula: "ΣF = m · a   (Satuan Gaya: Newton = kg·m/s²)",
+            rewardGold: 45,
+            rewardEnergy: 30
+          },
+          {
+            id: "fis-m2",
+            title: "2. Kekekalan Energi Mekanik",
+            tag: "Usaha & Energi",
+            summary: "Jika hanya gaya konservatif (seperti gaya gravitasi) yang bekerja pada sistem tanpa gesekan, jumlah Energi Potensial (Ep) dan Energi Kinetik (Ek) benda selalu konstan di setiap titik lintasan.",
+            formula: "EM₁ = EM₂   ⇔   m·g·h₁ + ½·m·v₁² = m·g·h₂ + ½·m·v₂²",
+            rewardGold: 55,
+            rewardEnergy: 35
+          }
+        ],
+        quiz: [
+          {
+            id: "fis-q1",
+            difficulty: "Konsep Dasar",
+            question: "Sebuah balok bermassa 4 kg ditarik di atas lantai licin dengan gaya mendatar sebesar 20 N. Percepatan yang dialami balok tersebut adalah...",
+            options: [
+              "0,2 m/s²",
+              "4 m/s²",
+              "5 m/s²",
+              "80 m/s²"
+            ],
+            correctIndex: 2,
+            hint: "Gunakan persamaan Hukum II Newton: a = F / m.",
+            explanation: "a = ΣF / m = 20 N / 4 kg = 5 m/s².",
+            baseGold: 35,
+            baseEnergy: 25
+          },
+          {
+            id: "fis-q2",
+            difficulty: "Energi Kinetik",
+            question: "Benda bermassa 2 kg bergerak dengan kecepatan 6 m/s. Besar energi kinetik benda tersebut adalah...",
+            options: [
+              "12 Joule",
+              "24 Joule",
+              "36 Joule",
+              "72 Joule"
+            ],
+            correctIndex: 2,
+            hint: "Rumus Energi Kinetik adalah Ek = ½ · m · v².",
+            explanation: "Ek = ½ × 2 kg × (6 m/s)² = 1 × 36 = 36 Joule.",
+            baseGold: 35,
+            baseEnergy: 30
+          },
+          {
+            id: "fis-q3",
+            difficulty: "Gerak Jatuh Bebas",
+            question: "Sebuah kelapa bermassa 1,5 kg jatuh bebas dari ketinggian 20 meter di atas tanah (g = 10 m/s²). Kecepatan kelapa tepat saat menyentuh tanah adalah...",
+            options: [
+              "10 m/s",
+              "15 m/s",
+              "20 m/s",
+              "40 m/s"
+            ],
+            correctIndex: 2,
+            hint: "Gunakan kekekalan energi mekanik: m·g·h = ½·m·v², sehingga v = √(2·g·h).",
+            explanation: "v = √(2 × 10 × 20) = √400 = 20 m/s.",
+            baseGold: 45,
+            baseEnergy: 30
+          },
+          {
+            id: "fis-q4",
+            difficulty: "Momentum & Impuls",
+            question: "Gaya sebesar 50 N bekerja pada sebuah bola selama 0,2 sekon. Besar impuls yang diterima bola tersebut adalah...",
+            options: [
+              "10 N·s",
+              "25 N·s",
+              "50,2 N·s",
+              "250 N·s"
+            ],
+            correctIndex: 0,
+            hint: "Impuls (I) merupakan hasil kali gaya rata-rata (F) dengan selang waktu kontak (Δt).",
+            explanation: "I = F × Δt = 50 N × 0,2 s = 10 N·s.",
+            baseGold: 40,
+            baseEnergy: 35
+          }
+        ]
+      },
+
+      biologi: {
+        name: "Biologi",
+        subtopic: "Struktur Sel, Metabolisme & Genetika",
+        accent: "emerald",
+        materi: [
+          {
+            id: "bio-m1",
+            title: "1. Organel Sel Eukariotik & Fungsinya",
+            tag: "Biologi Sel",
+            summary: "Sel eukariotik memiliki membran inti dan organel bermembran dengan tugas spesifik. Mitokondria berperan sebagai pusat respirasi sel penghasil ATP, sedangkan ribosom berfungsi sebagai tempat sintesis protein.",
+            formula: "Glukosa + 6 O₂ → 6 CO₂ + 6 H₂O + Energi (36–38 ATP di Mitokondria)",
+            rewardGold: 45,
+            rewardEnergy: 30
+          },
+          {
+            id: "bio-m2",
+            title: "2. Sintesis Protein (Transkripsi & Translasi)",
+            tag: "Genetika Molekuler",
+            summary: "Ekspresi gen berlangsung dalam dua tahap utama: Transkripsi (pencetakan mRNA dari DNA template di dalam nukleus) dan Translasi (penerjemahan kodon mRNA menjadi rangkaian asam amino di ribosom).",
+            formula: "DNA (Sense/Antisense) ──[Transkripsi]──▶ mRNA ──[Translasi]──▶ Polipeptida",
+            rewardGold: 55,
+            rewardEnergy: 35
+          }
+        ],
+        quiz: [
+          {
+            id: "bio-q1",
+            difficulty: "Konsep Dasar",
+            question: "Organel sel yang dijuluki sebagai 'powerhouse of the cell' karena menjadi tempat berlangsungnya respirasi aerob penghasil ATP adalah...",
+            options: [
+              "Lisosom",
+              "Badan Golgi",
+              "Mitokondria",
+              "Retikulum Endoplasma Halus"
+            ],
+            correctIndex: 2,
+            hint: "Organel ini memiliki membran ganda dengan lekukan dalam bernama krista.",
+            explanation: "Mitokondria adalah tempat berlangsungnya siklus Krebs dan transpor elektron untuk menghasilkan sebagian besar ATP sel.",
+            baseGold: 35,
+            baseEnergy: 25
+          },
+          {
+            id: "bio-q2",
+            difficulty: "Genetika Molekuler",
+            question: "Jika rantai DNA template (cetakan) memiliki urutan basa nitrogen 3'-T A C - G G A - C A T-5', maka urutan kodon mRNA hasil transkripsinya adalah...",
+            options: [
+              "5'-A U G - C C U - G U A-3'",
+              "5'-A T G - C C T - G T A-3'",
+              "5'-U A C - G G A - C A U-3'",
+              "5'-T A C - G G A - C A T-3'"
+            ],
+            correctIndex: 0,
+            hint: "Pada RNA tidak ada basa Timin (T), melainkan digantikan oleh Urasil (U) yang berpasangan dengan Adenin (A).",
+            explanation: "Pasangan basa DNA → mRNA: T→A, A→U, C→G, G→C. Jadi 3'-TAC GGA CAT-5' menjadi 5'-AUG CCU GUA-3'.",
+            baseGold: 45,
+            baseEnergy: 30
+          },
+          {
+            id: "bio-q3",
+            difficulty: "Metabolisme",
+            question: "Tahap pertama respirasi aerob yang berlangsung di sitoplasma dan memecah 1 molekul glukosa menjadi 2 asam piruvat disebut...",
+            options: [
+              "Glikolisis",
+              "Dekarboksilasi Oksidatif",
+              "Siklus Krebs",
+              "Fotofosforilasi"
+            ],
+            correctIndex: 0,
+            hint: "Proses ini tidak membutuhkan oksigen secara langsung dan menghasilkan 2 ATP bersih serta 2 NADH.",
+            explanation: "Glikolisis terjadi di sitosol/sitoplasma dan mengubah glukosa (6C) menjadi 2 molekul asam piruvat (3C).",
+            baseGold: 40,
+            baseEnergy: 30
+          },
+          {
+            id: "bio-q4",
+            difficulty: "Hereditas Mendel",
+            question: "Persilangan antara tanaman berbunga merah dominan heterozigot (Mm) dengan sesamanya (Mm) akan menghasilkan keturunan dengan rasio fenotipe Merah : Putih sebesar...",
+            options: [
+              "1 : 1",
+              "2 : 1",
+              "3 : 1",
+              "1 : 2 : 1"
+            ],
+            correctIndex: 2,
+            hint: "Genotipe yang muncul dari Mm × Mm adalah MM, Mm, Mm, dan mm.",
+            explanation: "MM (Merah), Mm (Merah), Mm (Merah), dan mm (Putih). Jadi rasio fenotipe Merah : Putih = 3 : 1.",
+            baseGold: 40,
+            baseEnergy: 35
+          }
+        ]
+      }
+    };
+
+    // =========================================================================
+    // 2. KONFIGURASI BANGUNAN PULAU (BASE BUILDER MECHANICS)
+    // =========================================================================
+    const BUILDINGS_CONFIG = [
+      {
+        id: "observatory",
+        name: "Menara Observatorium",
+        icon: "fa-telescope",
+        accentColor: "amber",
+        maxLevel: 5,
+        baseGoldCost: 60,
+        baseEnergyCost: 30,
+        description: "Meningkatkan perolehan Koin Ilmu (+20% per level) setiap kali menjawab soal.",
+        getEffectText: (lv) => lv === 0 ? "Belum dibangun (+0% Koin)" : `Bonus Koin Soal: +${lv * 20}%`
+      },
+      {
+        id: "reactor",
+        name: "Reaktor Energi Surya",
+        icon: "fa-solar-panel",
+        accentColor: "cyan",
+        maxLevel: 5,
+        baseGoldCost: 50,
+        baseEnergyCost: 40,
+        description: "Meningkatkan kapasitas & perolehan Energi Riset (+20% per level).",
+        getEffectText: (lv) => lv === 0 ? "Belum dibangun (+0% Energi)" : `Bonus Energi Soal: +${lv * 20}%`
+      },
+      {
+        id: "library",
+        name: "Perpustakaan Kristal",
+        icon: "fa-book-sparkles",
+        accentColor: "purple",
+        maxLevel: 3,
+        baseGoldCost: 80,
+        baseEnergyCost: 50,
+        description: "Membuka fitur Hint gratis saat mengerjakan kuis & menambah bonus XP materi.",
+        getEffectText: (lv) => lv === 0 ? "Terkunci: Hint Gratis" : `Hint Aktif (${lv}x per soal) & +${lv * 10}% Semua Resource`
+      },
+      {
+        id: "garden",
+        name: "Taman & Monumen Pulau",
+        icon: "fa-seedling",
+        accentColor: "emerald",
+        maxLevel: 4,
+        baseGoldCost: 45,
+        baseEnergyCost: 25,
+        description: "Memperindah pulau terapung dengan flora bercahaya & memberi bonus global +5% per level.",
+        getEffectText: (lv) => lv === 0 ? "Lahan Kosong" : `Estetika Pulau +${lv * 25}% & Bonus Global +${lv * 5}%`
+      }
+    ];
+
+    // =========================================================================
+    // 3. STATE MANAGEMENT & LOCALSTORAGE AUTO-SAVE
+    // =========================================================================
+    const STORAGE_KEY = "edurealm_study_tycoon_v1";
+
+    const DEFAULT_STATE = {
+      gold: 120,
+      energy: 80,
+      streak: 1,
+      soundEnabled: true,
+      currentSubject: "matematika",
+      studyMode: "materi",
+      quizIndex: {
+        matematika: 0,
+        fisika: 0,
+        biologi: 0
+      },
+      completedMateri: [],
+      solvedQuiz: [],
+      buildings: {
+        observatory: 1,
+        reactor: 0,
+        library: 0,
+        garden: 0
+      }
+    };
+
+    let state = loadState();
+    let currentQuestionAnswered = false;
+    let hintUsedOnCurrentQuestion = false;
+
+    function loadState() {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if (!raw) return JSON.parse(JSON.stringify(DEFAULT_STATE));
+        const parsed = JSON.parse(raw);
+        return {
+          ...JSON.parse(JSON.stringify(DEFAULT_STATE)),
+          ...parsed,
+          quizIndex: { ...DEFAULT_STATE.quizIndex, ...(parsed.quizIndex || {}) },
+          buildings: { ...DEFAULT_STATE.buildings, ...(parsed.buildings || {}) }
+        };
+      } catch (e) {
+        return JSON.parse(JSON.stringify(DEFAULT_STATE));
+      }
+    }
+
+    function saveState() {
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+      } catch (e) {
+        // Abaikan jika storage penuh
+      }
+    }
+
+    // =========================================================================
+    // 4. WEB AUDIO API (EFEK SUARA SINTETIS TANPA URL EKSTERNAL)
+    // =========================================================================
+    let audioCtx = null;
+
+    function playSound(type) {
+      if (!state.soundEnabled) return;
+      try {
+        if (!audioCtx) {
+          audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        }
+        if (audioCtx.state === "suspended") {
+          audioCtx.resume();
+        }
+
+        const now = audioCtx.currentTime;
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+
+        if (type === "correct") {
+          osc.type = "triangle";
+          osc.frequency.setValueAtTime(523.25, now);
+          osc.frequency.setValueAtTime(659.25, now + 0.08);
+          osc.frequency.setValueAtTime(783.99, now + 0.16);
+          gain.gain.setValueAtTime(0.15, now);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + 0.35);
+          osc.start(now);
+          osc.stop(now + 0.35);
+        } else if (type === "wrong") {
+          osc.type = "sawtooth";
+          osc.frequency.setValueAtTime(220, now);
+          osc.frequency.linearRampToValueAtTime(155, now + 0.25);
+          gain.gain.setValueAtTime(0.12, now);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + 0.28);
+          osc.start(now);
+          osc.stop(now + 0.28);
+        } else if (type === "upgrade") {
+          osc.type = "sine";
+          osc.frequency.setValueAtTime(440, now);
+          osc.frequency.setValueAtTime(554.37, now + 0.07);
+          osc.frequency.setValueAtTime(659.25, now + 0.14);
+          osc.frequency.setValueAtTime(880, now + 0.21);
+          gain.gain.setValueAtTime(0.16, now);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + 0.45);
+          osc.start(now);
+          osc.stop(now + 0.45);
+        } else if (type === "click") {
+          osc.type = "sine";
+          osc.frequency.setValueAtTime(600, now);
+          gain.gain.setValueAtTime(0.05, now);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + 0.06);
+          osc.start(now);
+          osc.stop(now + 0.06);
+        }
+      } catch (err) {
+        // Fallback aman jika browser memblokir audio
+      }
+    }
+
+    function toggleSound() {
+      state.soundEnabled = !state.soundEnabled;
+      saveState();
+      updateSoundIcon();
+      if (state.soundEnabled) playSound("click");
+      showToast(state.soundEnabled ? "Efek suara diaktifkan" : "Efek suara dimatikan", "info");
+    }
+
+    function updateSoundIcon() {
+      const icon = document.getElementById("sound-icon");
+      if (!icon) return;
+      icon.className = state.soundEnabled
+        ? "fa-solid fa-volume-high text-sm text-cyan-300"
+        : "fa-solid fa-volume-xmark text-sm text-indigo-300";
+    }
+
+    // =========================================================================
+    // 5. KALKULASI BONUS & MULTIPLIER TYCOON
+    // =========================================================================
+    function getMultipliers() {
+      const obsLv = state.buildings.observatory || 0;
+      const reacLv = state.buildings.reactor || 0;
+      const libLv = state.buildings.library || 0;
+      const garLv = state.buildings.garden || 0;
+
+      const globalBonus = libLv * 0.10 + garLv * 0.05;
+      const goldMult = 1 + obsLv * 0.20 + globalBonus;
+      const energyMult = 1 + reacLv * 0.20 + globalBonus;
+
+      return {
+        goldMult,
+        energyMult,
+        goldPercent: Math.round((goldMult - 1) * 100),
+        energyPercent: Math.round((energyMult - 1) * 100)
+      };
+    }
+
+    function getTotalIslandLevel() {
+      return Object.values(state.buildings).reduce((sum, lv) => sum + lv, 0);
+    }
+
+    function getIslandRankTitle(totalLv) {
+      if (totalLv <= 2) return "Pos Perintis";
+      if (totalLv <= 5) return "Koloni Akademia";
+      if (totalLv <= 9) return "Benteng Cendekia";
+      if (totalLv <= 13) return "Kota Langit Nusantara";
+      return "Sitadel Agung Ilmu";
+    }
+
+    // =========================================================================
+    // 6. NOTIFIKASI TOAST & FLOATING REWARD ANIMATION
+    // =========================================================================
+    function showToast(message, type = "info") {
+      const container = document.getElementById("toast-container");
+      const toast = document.createElement("div");
+
+      const styles = {
+        success: "bg-slate-900/95 border-emerald-500/50 text-emerald-200",
+        warning: "bg-slate-900/95 border-amber-500/50 text-amber-200",
+        error: "bg-slate-900/95 border-rose-500/50 text-rose-200",
+        info: "bg-slate-900/95 border-cyan-500/50 text-cyan-200"
+      };
+
+      const icons = {
+        success: "fa-circle-check text-emerald-400",
+        warning: "fa-triangle-exclamation text-amber-400",
+        error: "fa-circle-xmark text-rose-400",
+        info: "fa-circle-info text-cyan-400"
+      };
+
+      toast.className = `flex items-center gap-3 px-4 py-3 rounded-xl border shadow-2xl backdrop-blur-md text-xs sm:text-sm font-medium transition-all duration-300 ${styles[type] || styles.info}`;
+      toast.innerHTML = `<i class="fa-solid ${icons[type] || icons.info} text-base"></i><span>${message}</span>`;
+
+      container.appendChild(toast);
+      setTimeout(() => {
+        toast.style.opacity = "0";
+        toast.style.transform = "translateY(8px)";
+        setTimeout(() => toast.remove(), 300);
+      }, 2600);
+    }
+
+    function spawnFloatingReward(goldAmount, energyAmount, x = null, y = null) {
+      const layer = document.getElementById("floating-rewards-layer");
+      const el = document.createElement("div");
+
+      const posX = x !== null ? x : window.innerWidth * 0.45;
+      const posY = y !== null ? y : window.innerHeight * 0.35;
+
+      el.style.left = `${Math.min(Math.max(posX - 60, 20), window.innerWidth - 180)}px`;
+      el.style.top = `${Math.max(posY - 20, 70)}px`;
+      el.className = "fixed floating-reward flex items-center gap-2 bg-slate-900/90 border border-amber-400/50 px-3.5 py-1.5 rounded-full shadow-xl font-mono text-xs sm:text-sm font-bold";
+      el.innerHTML = `
+        <span class="text-amber-300">+${goldAmount} <i class="fa-solid fa-coins"></i></span>
+        <span class="text-slate-600">|</span>
+        <span class="text-cyan-300">+${energyAmount} <i class="fa-solid fa-bolt"></i></span>
+      `;
+
+      layer.appendChild(el);
+      setTimeout(() => el.remove(), 1450);
+    }
+
+    // =========================================================================
+    // 7. RENDER AREA BELAJAR (MATERI RINGKAS & KUIS INTERAKTIF)
+    // =========================================================================
+    function selectSubject(subjKey) {
+      if (!CURRICULUM_DATA[subjKey]) return;
+      state.currentSubject = subjKey;
+      saveState();
+      playSound("click");
+      renderAll();
+    }
+
+    function switchStudyMode(mode) {
+      state.studyMode = mode;
+      saveState();
+      playSound("click");
+      renderStudyArea();
+    }
+
+    function renderStudyArea() {
+      const subjKey = state.currentSubject;
+      const subjData = CURRICULUM_DATA[subjKey];
+      const mult = getMultipliers();
+
+      // Update Active Tab Mata Pelajaran
+      ["matematika", "fisika", "biologi"].forEach((key) => {
+        const btn = document.getElementById(`subj-btn-${key}`);
+        if (!btn) return;
+        if (key === subjKey) {
+          btn.className = "subj-tab flex-1 md:flex-initial flex items-center justify-center gap-2 px-3.5 py-2 rounded-lg text-xs sm:text-sm font-bold bg-white/15 text-white border border-purple-200/40 shadow-sm transition";
+        } else {
+          btn.className = "subj-tab flex-1 md:flex-initial flex items-center justify-center gap-2 px-3.5 py-2 rounded-lg text-xs sm:text-sm font-medium text-indigo-200/80 hover:text-white transition";
+        }
+      });
+
+      // Update Mode Buttons (Materi vs Kuis)
+      const btnMateri = document.getElementById("mode-btn-materi");
+      const btnKuis = document.getElementById("mode-btn-kuis");
+      if (state.studyMode === "materi") {
+        btnMateri.className = "px-3.5 py-2 rounded-lg text-xs sm:text-sm font-bold flex items-center gap-2 bg-cyan-400 text-slate-950 shadow-md shadow-cyan-400/20 transition";
+        btnKuis.className = "px-3.5 py-2 rounded-lg text-xs sm:text-sm font-semibold flex items-center gap-2 text-indigo-200 hover:text-white transition";
+        document.getElementById("view-materi").classList.remove("hidden");
+        document.getElementById("view-kuis").classList.add("hidden");
+      } else {
+        btnKuis.className = "px-3.5 py-2 rounded-lg text-xs sm:text-sm font-bold flex items-center gap-2 bg-cyan-400 text-slate-950 shadow-md shadow-cyan-400/20 transition";
+        btnMateri.className = "px-3.5 py-2 rounded-lg text-xs sm:text-sm font-semibold flex items-center gap-2 text-indigo-200 hover:text-white transition";
+        document.getElementById("view-kuis").classList.remove("hidden");
+        document.getElementById("view-kuis").classList.add("flex");
+        document.getElementById("view-materi").classList.add("hidden");
+      }
+
+      // Header Sub-bab & Progress
+      document.getElementById("subject-badge").textContent = `${subjData.name} • Kurikulum SMA`;
+      document.getElementById("module-title").textContent = subjData.subtopic;
+      document.getElementById("bonus-multiplier-label").textContent = `Bonus Riset: +${mult.goldPercent}% Koin | +${mult.energyPercent}% Energi`;
+
+      const totalItems = subjData.materi.length + subjData.quiz.length;
+      const doneMateri = subjData.materi.filter((m) => state.completedMateri.includes(m.id)).length;
+      const doneQuiz = subjData.quiz.filter((q) => state.solvedQuiz.includes(q.id)).length;
+      const progressPct = Math.round(((doneMateri + doneQuiz) / totalItems) * 100);
+
+      document.getElementById("progress-label").textContent = `Progres Penguasaan Bab: ${progressPct}% (${doneMateri + doneQuiz}/${totalItems} Selesai)`;
+      document.getElementById("subject-progress-bar").style.width = `${progressPct}%`;
+
+      renderMateriCards(subjData, mult);
+      renderCurrentQuestion(subjData, mult);
+    }
+
+    function renderMateriCards(subjData, mult) {
+      const container = document.getElementById("materi-cards-container");
+      container.innerHTML = subjData.materi.map((m) => {
+        const isClaimed = state.completedMateri.includes(m.id);
+        const finalGold = Math.round(m.rewardGold * mult.goldMult);
+        const finalEnergy = Math.round(m.rewardEnergy * mult.energyMult);
+
+        return `
+          <article class="purple-blue-panel backdrop-blur-md border ${isClaimed ? 'border-emerald-400/45' : 'border-purple-300/35'} rounded-2xl p-5 sm:p-6 shadow-xl shadow-indigo-950/25 transition hover:border-sky-300/60">
+            <div class="flex flex-wrap items-center justify-between gap-2 mb-3">
+              <span class="text-xs font-semibold px-2.5 py-1 rounded-lg purple-blue-subbox text-indigo-100 border border-indigo-300/30">
+                ${m.tag}
+              </span>
+              ${isClaimed
+                ? `<span class="inline-flex items-center gap-1.5 text-xs font-bold text-emerald-300 bg-emerald-500/15 border border-emerald-400/35 px-3 py-1 rounded-full">
+                    <i class="fa-solid fa-circle-check"></i> Materi Dipahami
+                   </span>`
+                : `<span class="text-xs font-mono text-amber-300">
+                    Hadiah: +${finalGold} Koin & +${finalEnergy} Energi
+                   </span>`
+              }
+            </div>
+
+            <h3 class="text-base sm:text-lg font-bold text-white mb-2.5">${m.title}</h3>
+            <p class="text-sm text-indigo-100/90 leading-relaxed mb-4">${m.summary}</p>
+
+            <!-- Kotak Rumus / Konsep Kunci -->
+            <div class="p-3.5 rounded-xl purple-blue-subbox border border-cyan-300/35 font-mono text-xs sm:text-sm text-cyan-200 mb-5 overflow-x-auto">
+              <span class="text-[10px] uppercase tracking-wider text-indigo-300 block mb-1">Rumus & Prinsip Inti:</span>
+              ${m.formula}
+            </div>
+
+            <div class="flex flex-wrap items-center justify-between gap-3 pt-3 border-t border-indigo-300/25">
+              <button onclick="switchStudyMode('kuis')" class="text-xs sm:text-sm font-semibold text-cyan-300 hover:text-cyan-200 flex items-center gap-1.5 transition">
+                <span>Uji Pemahaman di Latihan Soal</span>
+                <i class="fa-solid fa-arrow-right text-xs"></i>
+              </button>
+
+              ${isClaimed
+                ? `<button disabled class="px-4 py-2 rounded-xl bg-indigo-950/60 text-indigo-300/60 border border-indigo-400/20 text-xs sm:text-sm font-semibold cursor-not-allowed">
+                    Resource Sudah Diklaim
+                   </button>`
+                : `<button onclick="claimMateriReward('${m.id}', event)" class="px-4 py-2.5 rounded-xl bg-gradient-to-r from-emerald-400 to-cyan-400 hover:from-emerald-300 hover:to-cyan-300 text-slate-950 font-bold text-xs sm:text-sm shadow-lg shadow-emerald-500/25 flex items-center gap-2 transition">
+                    <i class="fa-solid fa-check-double"></i>
+                    <span>Selesai Baca (+${finalGold} Koin, +${finalEnergy} Energi)</span>
+                   </button>`
+              }
+            </div>
+          </article>
+        `;
+      }).join("");
+    }
+
+    function claimMateriReward(materiId, event) {
+      if (state.completedMateri.includes(materiId)) return;
+      const subjData = CURRICULUM_DATA[state.currentSubject];
+      const materi = subjData.materi.find((m) => m.id === materiId);
+      if (!materi) return;
+
+      const mult = getMultipliers();
+      const gainedGold = Math.round(materi.rewardGold * mult.goldMult);
+      const gainedEnergy = Math.round(materi.rewardEnergy * mult.energyMult);
+
+      state.completedMateri.push(materiId);
+      state.gold += gainedGold;
+      state.energy += gainedEnergy;
+      saveState();
+
+      playSound("correct");
+      spawnFloatingReward(gainedGold, gainedEnergy, event?.clientX, event?.clientY);
+      showToast(`Materi selesai! +${gainedGold} Koin & +${gainedEnergy} Energi`, "success");
+      renderAll();
+    }
+
+    function renderCurrentQuestion(subjData, mult) {
+      const qList = subjData.quiz;
+      const idx = state.quizIndex[state.currentSubject] % qList.length;
+      const q = qList[idx];
+
+      currentQuestionAnswered = false;
+      hintUsedOnCurrentQuestion = false;
+
+      const isAlreadySolved = state.solvedQuiz.includes(q.id);
+      const rewardFactor = isAlreadySolved ? 0.4 : 1;
+      const potGold = Math.max(10, Math.round(q.baseGold * mult.goldMult * rewardFactor));
+      const potEnergy = Math.max(10, Math.round(q.baseEnergy * mult.energyMult * rewardFactor));
+
+      document.getElementById("quiz-number-badge").textContent = `Soal ${idx + 1} / ${qList.length}`;
+      document.getElementById("quiz-difficulty-badge").textContent = isAlreadySolved ? `${q.difficulty} (Latihan Ulang)` : q.difficulty;
+      document.getElementById("potential-gold").textContent = potGold;
+      document.getElementById("potential-energy").textContent = potEnergy;
+      document.getElementById("quiz-question-text").textContent = q.question;
+
+      const solvedInSubj = qList.filter((item) => state.solvedQuiz.includes(item.id)).length;
+      document.getElementById("quiz-solved-count").textContent = `Terjawab: ${solvedInSubj}/${qList.length}`;
+
+      // Reset Hint & Feedback Box
+      const hintBox = document.getElementById("quiz-hint-box");
+      hintBox.classList.add("hidden");
+      document.getElementById("quiz-hint-text").textContent = q.hint;
+
+      const libLv = state.buildings.library || 0;
+      const hintBtnText = document.getElementById("hint-btn-text");
+      if (libLv > 0) {
+        hintBtnText.textContent = "Hint Gratis (Perpustakaan)";
+      } else {
+        hintBtnText.textContent = "Hint (15 Energi)";
+      }
+
+      const feedbackBox = document.getElementById("quiz-feedback-box");
+      feedbackBox.classList.add("hidden");
+
+      // Render Opsi Pilihan Ganda
+      const optionsContainer = document.getElementById("quiz-options-container");
+      const letters = ["A", "B", "C", "D"];
+
+      optionsContainer.innerHTML = q.options.map((optText, i) => `
+        <button
+          id="quiz-opt-${i}"
+          onclick="submitQuizAnswer(${i}, event)"
+          class="quiz-option-btn w-full text-left p-4 rounded-xl purple-blue-subbox hover:bg-indigo-800/80 border border-indigo-300/35 hover:border-cyan-300/70 transition flex items-center gap-3.5 group"
+        >
+          <span class="w-8 h-8 rounded-lg bg-indigo-950/90 group-hover:bg-cyan-400 group-hover:text-slate-950 text-indigo-100 font-mono font-bold text-xs flex items-center justify-center border border-indigo-300/35 transition shrink-0">
+            ${letters[i]}
+          </span>
+          <span class="text-sm sm:text-base text-white font-medium">${optText}</span>
+        </button>
+      `).join("");
+    }
+
+    function useCrystalHint() {
+      if (hintUsedOnCurrentQuestion) {
+        document.getElementById("quiz-hint-box").classList.remove("hidden");
+        return;
+      }
+
+      const libLv = state.buildings.library || 0;
+      if (libLv === 0) {
+        if (state.energy < 15) {
+          showToast("Energi tidak cukup (butuh 15 Energi) atau bangun Perpustakaan Kristal!", "warning");
+          return;
+        }
+        state.energy -= 15;
+        saveState();
+        updateHeaderUI();
+        renderBuildingsPanel();
+        showToast("Menggunakan 15 Energi untuk membuka petunjuk.", "info");
+      } else {
+        showToast("Perpustakaan Kristal memberikan Hint gratis!", "info");
+      }
+
+      hintUsedOnCurrentQuestion = true;
+      playSound("click");
+      document.getElementById("quiz-hint-box").classList.remove("hidden");
+    }
+
+    function submitQuizAnswer(selectedIndex, event) {
+      if (currentQuestionAnswered) return;
+      currentQuestionAnswered = true;
+
+      const subjData = CURRICULUM_DATA[state.currentSubject];
+      const idx = state.quizIndex[state.currentSubject] % subjData.quiz.length;
+      const q = subjData.quiz[idx];
+      const isCorrect = selectedIndex === q.correctIndex;
+
+      // Kunci semua tombol opsi & beri warna visual benar/salah
+      q.options.forEach((_, i) => {
+        const btn = document.getElementById(`quiz-opt-${i}`);
+        btn.disabled = true;
+        btn.classList.remove("hover:bg-indigo-800/80", "hover:border-cyan-300/70");
+
+        if (i === q.correctIndex) {
+          btn.className = "w-full text-left p-4 rounded-xl bg-emerald-950/75 border-2 border-emerald-400 text-emerald-100 flex items-center gap-3.5";
+          btn.querySelector("span:first-child").className = "w-8 h-8 rounded-lg bg-emerald-400 text-slate-950 font-mono font-bold text-xs flex items-center justify-center shrink-0";
+        } else if (i === selectedIndex && !isCorrect) {
+          btn.className = "w-full text-left p-4 rounded-xl bg-rose-950/75 border-2 border-rose-400 text-rose-100 flex items-center gap-3.5";
+          btn.querySelector("span:first-child").className = "w-8 h-8 rounded-lg bg-rose-400 text-slate-950 font-mono font-bold text-xs flex items-center justify-center shrink-0";
+        } else {
+          btn.className = "w-full text-left p-4 rounded-xl bg-indigo-950/40 border border-indigo-300/20 text-indigo-300/50 flex items-center gap-3.5 opacity-60";
+        }
+      });
+
+      const feedbackBox = document.getElementById("quiz-feedback-box");
+      const feedbackIcon = document.getElementById("quiz-feedback-icon");
+      const feedbackTitle = document.getElementById("quiz-feedback-title");
+      const rewardSummary = document.getElementById("quiz-reward-summary");
+
+      document.getElementById("quiz-explanation-text").textContent = q.explanation;
+      feedbackBox.classList.remove("hidden");
+
+      if (isCorrect) {
+        const mult = getMultipliers();
+        const isFirstTime = !state.solvedQuiz.includes(q.id);
+        const rewardFactor = isFirstTime ? 1 : 0.4;
+        const streakBonus = Math.min(state.streak * 2, 20);
+
+        const gainedGold = Math.max(10, Math.round(q.baseGold * mult.goldMult * rewardFactor)) + streakBonus;
+        const gainedEnergy = Math.max(10, Math.round(q.baseEnergy * mult.energyMult * rewardFactor));
+
+        if (isFirstTime) {
+          state.solvedQuiz.push(q.id);
+        }
+        state.gold += gainedGold;
+        state.energy += gainedEnergy;
+        state.streak += 1;
+        saveState();
+
+        playSound("correct");
+        spawnFloatingReward(gainedGold, gainedEnergy, event?.clientX, event?.clientY);
+
+        feedbackBox.className = "mt-6 p-4 sm:p-5 rounded-2xl border bg-emerald-950/75 border-emerald-400/50 transition-all";
+        feedbackIcon.className = "w-9 h-9 rounded-xl flex items-center justify-center shrink-0 mt-0.5 bg-emerald-400/20 text-emerald-300";
+        feedbackIcon.innerHTML = `<i class="fa-solid fa-check text-lg"></i>`;
+        feedbackTitle.className = "font-bold text-base mb-1 text-emerald-200";
+        feedbackTitle.textContent = "Jawaban Tepat! Resource Terkumpul";
+        rewardSummary.className = "text-xs font-mono font-bold text-amber-300";
+        rewardSummary.textContent = `+${gainedGold} Koin (termasuk bonus streak) & +${gainedEnergy} Energi`;
+      } else {
+        state.streak = 1;
+        saveState();
+        playSound("wrong");
+
+        feedbackBox.className = "mt-6 p-4 sm:p-5 rounded-2xl border bg-rose-950/75 border-rose-400/50 transition-all";
+        feedbackIcon.className = "w-9 h-9 rounded-xl flex items-center justify-center shrink-0 mt-0.5 bg-rose-400/20 text-rose-300";
+        feedbackIcon.innerHTML = `<i class="fa-solid fa-xmark text-lg"></i>`;
+        feedbackTitle.className = "font-bold text-base mb-1 text-rose-200";
+        feedbackTitle.textContent = "Kurang Tepat — Simak Pembahasannya";
+        rewardSummary.className = "text-xs font-mono font-medium text-indigo-200";
+        rewardSummary.textContent = "Streak direset ke 1. Coba lagi di soal berikutnya!";
+      }
+
+      updateHeaderUI();
+      renderBuildingsPanel();
+    }
+
+    function nextQuestion() {
+      const subjData = CURRICULUM_DATA[state.currentSubject];
+      state.quizIndex[state.currentSubject] = (state.quizIndex[state.currentSubject] + 1) % subjData.quiz.length;
+      saveState();
+      playSound("click");
+      renderStudyArea();
+    }
+
+    // =========================================================================
+    // 8. RENDER DUNIA VIRTUAL ISOMETRIK & PANEL BANGUNAN TYCOON
+    // =========================================================================
+    function updateHeaderUI() {
+      document.getElementById("stat-gold").textContent = state.gold.toLocaleString("id-ID");
+      document.getElementById("stat-energy").textContent = state.energy.toLocaleString("id-ID");
+      document.getElementById("stat-streak").textContent = state.streak;
+
+      const totalLv = getTotalIslandLevel();
+      document.getElementById("stat-island-lv").textContent = totalLv;
+      document.getElementById("island-rank-title").textContent = getIslandRankTitle(totalLv);
+    }
+
+    function getUpgradeCost(building, currentLv) {
+      const factor = Math.pow(1.45, currentLv);
+      return {
+        gold: Math.round(building.baseGoldCost * factor),
+        energy: Math.round(building.baseEnergyCost * factor)
+      };
+    }
+
+    function renderIsometricIsland() {
+      const obsLv = state.buildings.observatory || 0;
+      const reacLv = state.buildings.reactor || 0;
+      const libLv = state.buildings.library || 0;
+      const garLv = state.buildings.garden || 0;
+
+      // 1. MENARA OBSERVATORIUM
+      const obsArt = document.getElementById("svg-observatory-art");
+      if (obsLv === 0) {
+        obsArt.innerHTML = `
+          <circle cx="250" cy="159" r="14" fill="none" stroke="#64748b" stroke-dasharray="3,3" />
+          <text x="250" y="163" text-anchor="middle" fill="#94a3b8" font-size="9" font-family="monospace">Slot 1</text>
+        `;
+      } else {
+        const towerHeight = 26 + obsLv * 11;
+        const topY = 159 - towerHeight;
+        obsArt.innerHTML = `
+          <polygon points="232,159 250,168 250,${topY + 9} 232,${topY}" fill="#334155" stroke="#475569" stroke-width="1" />
+          <polygon points="268,159 250,168 250,${topY + 9} 268,${topY}" fill="#1e293b" stroke="#475569" stroke-width="1" />
+          <ellipse cx="250" cy="${topY}" rx="20" ry="12" fill="url(#goldDomeGrad)" />
+          <line x1="250" y1="${topY - 12}" x2="250" y2="${topY - 24 - obsLv * 2}" stroke="#fde047" stroke-width="2.5" />
+          <circle cx="250" cy="${topY - 26 - obsLv * 2}" r="${3 + obsLv * 0.6}" fill="#fef08a" class="particle-glow" />
+          ${obsLv >= 3 ? `<ellipse cx="250" cy="${topY + 14}" rx="26" ry="9" fill="none" stroke="#fbbf24" stroke-width="1.5" opacity="0.8" />` : ""}
+        `;
+      }
+
+      // 2. REAKTOR ENERGI SURYA
+      const reacArt = document.getElementById("svg-reactor-art");
+      if (reacLv === 0) {
+        reacArt.innerHTML = `
+          <text x="155" y="206" text-anchor="middle" fill="#64748b" font-size="9" font-family="monospace">+ Reaktor</text>
+        `;
+      } else {
+        const coreSize = 10 + reacLv * 2.5;
+        reacArt.innerHTML = `
+          <polygon points="155,180 185,195 155,210 125,195" fill="url(#solarGrad)" opacity="0.85" stroke="#bae6fd" stroke-width="1" />
+          <circle cx="155" cy="184" r="${coreSize}" fill="#22d3ee" opacity="0.35" class="particle-glow" />
+          <circle cx="155" cy="184" r="${coreSize * 0.55}" fill="#cffafe" />
+          ${reacLv >= 2 ? `<polygon points="122,188 136,195 122,202 108,195" fill="#0284c7" stroke="#38bdf8" stroke-width="1" />` : ""}
+          ${reacLv >= 4 ? `<polygon points="188,188 202,195 188,202 174,195" fill="#0284c7" stroke="#38bdf8" stroke-width="1" />` : ""}
+        `;
+      }
+
+      // 3. PERPUSTAKAAN KRISTAL
+      const libArt = document.getElementById("svg-library-art");
+      if (libLv === 0) {
+        libArt.innerHTML = `
+          <text x="345" y="206" text-anchor="middle" fill="#64748b" font-size="9" font-family="monospace">+ Pustaka</text>
+        `;
+      } else {
+        const h = 24 + libLv * 9;
+        libArt.innerHTML = `
+          <polygon points="325,202 345,212 345,${212 - h} 325,${202 - h}" fill="#581c87" stroke="#a855f7" stroke-width="1" />
+          <polygon points="365,202 345,212 345,${212 - h} 365,${202 - h}" fill="#3b0764" stroke="#a855f7" stroke-width="1" />
+          <polygon points="345,${186 - h} 353,${198 - h} 345,${206 - h} 337,${198 - h}" fill="url(#crystalGrad)" class="particle-glow" />
+          ${libLv >= 2 ? `<circle cx="345" cy="${196 - h}" r="14" fill="none" stroke="#e879f9" stroke-width="1" stroke-dasharray="4,3" />` : ""}
+        `;
+      }
+
+      // 4. TAMAN FUTURISTIK & MONUMEN
+      const garArt = document.getElementById("svg-garden-art");
+      if (garLv === 0) {
+        garArt.innerHTML = `
+          <text x="250" y="255" text-anchor="middle" fill="#64748b" font-size="9" font-family="monospace">+ Taman</text>
+        `;
+      } else {
+        let trees = `
+          <circle cx="225" cy="248" r="8" fill="#10b981" />
+          <circle cx="225" cy="245" r="5" fill="#6ee7b7" />
+          <circle cx="275" cy="248" r="8" fill="#10b981" />
+          <circle cx="275" cy="245" r="5" fill="#6ee7b7" />
+        `;
+        if (garLv >= 2) {
+          trees += `
+            <polygon points="250,224 256,246 244,246" fill="#e2e8f0" />
+            <circle cx="250" cy="221" r="4" fill="#34d399" class="particle-glow" />
+          `;
+        }
+        if (garLv >= 3) {
+          trees += `
+            <circle cx="250" cy="264" r="7" fill="#34d399" />
+            <circle cx="212" cy="256" r="5" fill="#a7f3d0" />
+            <circle cx="288" cy="256" r="5" fill="#a7f3d0" />
+          `;
+        }
+        garArt.innerHTML = trees;
+      }
+
+      // 5. PARTIKEL AMBIENT CAHAYA BERDASARKAN TOTAL LEVEL PULAU
+      const totalLv = getTotalIslandLevel();
+      const particlesContainer = document.getElementById("svg-ambient-particles");
+      let particlesHTML = "";
+      const coords = [
+        [140, 120, "#38bdf8"], [360, 115, "#c084fc"], [250, 82, "#fbbf24"],
+        [110, 165, "#34d399"], [395, 165, "#f472b6"], [195, 105, "#fde047"],
+        [305, 105, "#22d3ee"], [165, 255, "#4ade80"], [335, 255, "#a78bfa"]
+      ];
+      const activeCount = Math.min(coords.length, Math.max(2, Math.floor(totalLv * 0.8)));
+      for (let i = 0; i < activeCount; i++) {
+        const [cx, cy, color] = coords[i];
+        particlesHTML += `<circle cx="${cx}" cy="${cy}" r="2.5" fill="${color}" class="particle-glow" style="animation-delay: ${i * 0.35}s" />`;
+      }
+      particlesContainer.innerHTML = particlesHTML;
+      bindIslandHoverTooltips();
+    }
+
+    function bindIslandHoverTooltips() {
+      const hoverBanner = document.getElementById("island-hover-info");
+      if (!hoverBanner) return;
+
+      const defaultMsg = `<i class="fa-solid fa-computer-mouse text-amber-300 mr-1.5"></i>Arahkan mouse ke bangunan pulau atau tekan <kbd class="px-1.5 py-0.5 bg-indigo-950 rounded border border-indigo-400/40 font-mono text-[10px]">F1</kbd>–<kbd class="px-1.5 py-0.5 bg-indigo-950 rounded border border-indigo-400/40 font-mono text-[10px]">F4</kbd> untuk upgrade.`;
+
+      BUILDINGS_CONFIG.forEach((b, idx) => {
+        const slotEl = document.getElementById(`svg-slot-${b.id}`);
+        if (!slotEl) return;
+        slotEl.onmouseenter = () => {
+          const lv = state.buildings[b.id] || 0;
+          hoverBanner.innerHTML = `<i class="fa-solid ${b.icon} text-amber-300 mr-1.5"></i><strong>${b.name}</strong> (Lv.${lv}/${b.maxLevel}) — ${b.getEffectText(lv)} <span class="text-amber-300 font-mono ml-1">[F${idx + 1}]</span>`;
+        };
+        slotEl.onmouseleave = () => {
+          hoverBanner.innerHTML = defaultMsg;
+        };
+      });
+    }
+
+    function renderBuildingsPanel() {
+      const container = document.getElementById("buildings-list-container");
+
+      const colorMap = {
+        amber: {
+          badge: "bg-amber-500/10 text-amber-400 border-amber-500/30",
+          btn: "bg-amber-500 hover:bg-amber-400 text-slate-950 shadow-amber-500/20",
+          iconBg: "bg-amber-500/10 text-amber-400 border-amber-500/30"
+        },
+        cyan: {
+          badge: "bg-cyan-500/10 text-cyan-400 border-cyan-500/30",
+          btn: "bg-cyan-500 hover:bg-cyan-400 text-slate-950 shadow-cyan-500/20",
+          iconBg: "bg-cyan-500/10 text-cyan-400 border-cyan-500/30"
+        },
+        purple: {
+          badge: "bg-purple-500/10 text-purple-400 border-purple-500/30",
+          btn: "bg-purple-500 hover:bg-purple-400 text-white shadow-purple-500/20",
+          iconBg: "bg-purple-500/10 text-purple-400 border-purple-500/30"
+        },
+        emerald: {
+          badge: "bg-emerald-500/10 text-emerald-400 border-emerald-500/30",
+          btn: "bg-emerald-500 hover:bg-emerald-400 text-slate-950 shadow-emerald-500/20",
+          iconBg: "bg-emerald-500/10 text-emerald-400 border-emerald-500/30"
+        }
+      };
+
+      container.innerHTML = BUILDINGS_CONFIG.map((b, idx) => {
+        const currentLv = state.buildings[b.id] || 0;
+        const isMax = currentLv >= b.maxLevel;
+        const cost = getUpgradeCost(b, currentLv);
+        const canAfford = !isMax && state.gold >= cost.gold && state.energy >= cost.energy;
+        const theme = colorMap[b.accentColor];
+
+        return `
+          <div id="building-card-${b.id}" class="p-3.5 rounded-xl purple-blue-subbox border border-indigo-300/30 hover:border-sky-300/60 transition flex flex-col justify-between gap-3">
+            <div class="flex items-start justify-between gap-2.5">
+              <div class="flex items-center gap-2.5">
+                <div class="w-9 h-9 rounded-lg border ${theme.iconBg} flex items-center justify-center shrink-0">
+                  <i class="fa-solid ${b.icon} text-sm"></i>
+                </div>
+                <div>
+                  <div class="flex items-center gap-1.5">
+                    <h4 class="font-bold text-xs sm:text-sm text-white">${b.name}</h4>
+                    <kbd class="hidden sm:inline-block px-1.5 py-0.5 bg-indigo-950/90 text-indigo-200 rounded border border-indigo-400/30 font-mono text-[10px]">F${idx + 1}</kbd>
+                  </div>
+                  <p class="text-[11px] text-indigo-200/85">${b.getEffectText(currentLv)}</p>
+                </div>
+              </div>
+
+              <span class="font-mono text-[11px] font-bold px-2 py-0.5 rounded-md border ${theme.badge} shrink-0">
+                ${isMax ? "Lv. MAX" : `Lv. ${currentLv}/${b.maxLevel}`}
+              </span>
+            </div>
+
+            <div class="flex items-center justify-between gap-2 pt-2 border-t border-indigo-300/20">
+              ${isMax
+                ? `<span class="text-xs font-mono text-emerald-400"><i class="fa-solid fa-crown mr-1"></i>Tingkat Maksimal</span>
+                   <button disabled class="px-3 py-1.5 rounded-lg bg-slate-800 text-slate-500 text-xs font-bold cursor-not-allowed">Maksimal</button>`
+                : `<div class="flex items-center gap-2 text-xs font-mono font-semibold">
+                    <span class="${state.gold >= cost.gold ? 'text-amber-400' : 'text-rose-400'}">
+                      ${cost.gold} <i class="fa-solid fa-coins"></i>
+                    </span>
+                    <span class="text-slate-600">+</span>
+                    <span class="${state.energy >= cost.energy ? 'text-cyan-400' : 'text-rose-400'}">
+                      ${cost.energy} <i class="fa-solid fa-bolt"></i>
+                    </span>
+                   </div>
+                   <button
+                     onclick="upgradeBuilding('${b.id}')"
+                     ${canAfford ? "" : "disabled"}
+                     class="px-3.5 py-1.5 rounded-lg text-xs font-bold transition shadow-lg flex items-center gap-1.5 ${
+                       canAfford
+                         ? theme.btn
+                         : "bg-slate-800 text-slate-500 border border-slate-700/60 cursor-not-allowed shadow-none"
+                     }">
+                     <i class="fa-solid fa-arrow-up"></i>
+                     <span>${currentLv === 0 ? "Bangun" : "Upgrade"}</span>
+                   </button>`
+              }
+            </div>
+          </div>
+        `;
+      }).join("");
+    }
+
+    function upgradeBuilding(buildingId) {
+      const b = BUILDINGS_CONFIG.find((item) => item.id === buildingId);
+      if (!b) return;
+
+      const currentLv = state.buildings[buildingId] || 0;
+      if (currentLv >= b.maxLevel) return;
+
+      const cost = getUpgradeCost(b, currentLv);
+      if (state.gold < cost.gold || state.energy < cost.energy) {
+        showToast("Koin atau Energi belum cukup! Jawab soal untuk mengumpulkan resource.", "warning");
+        return;
+      }
+
+      state.gold -= cost.gold;
+      state.energy -= cost.energy;
+      state.buildings[buildingId] = currentLv + 1;
+      saveState();
+
+      playSound("upgrade");
+      showToast(`${b.name} naik ke Level ${currentLv + 1}!`, "success");
+
+      renderAll();
+
+      const slotEl = document.getElementById(`svg-slot-${buildingId}`);
+      if (slotEl) {
+        slotEl.classList.remove("building-upgrade-pop");
+        void slotEl.offsetWidth;
+        slotEl.classList.add("building-upgrade-pop");
+      }
+    }
+
+    function focusBuildingCard(buildingId) {
+      const card = document.getElementById(`building-card-${buildingId}`);
+      if (!card) return;
+      playSound("click");
+      card.scrollIntoView({ behavior: "smooth", block: "nearest" });
+      card.classList.add("ring-2", "ring-cyan-400");
+      setTimeout(() => card.classList.remove("ring-2", "ring-cyan-400"), 1100);
+    }
+
+    // =========================================================================
+    // 9. MODAL RESET & KEYBOARD SHORTCUTS UNTUK PC / LAPTOP
+    // =========================================================================
+    function openResetModal() {
+      playSound("click");
+      const modal = document.getElementById("reset-modal");
+      modal.classList.remove("hidden");
+      modal.classList.add("flex");
+    }
+
+    function closeResetModal() {
+      const modal = document.getElementById("reset-modal");
+      modal.classList.add("hidden");
+      modal.classList.remove("flex");
+    }
+
+    function confirmResetProgress() {
+      state = JSON.parse(JSON.stringify(DEFAULT_STATE));
+      saveState();
+      closeResetModal();
+      playSound("click");
+      showToast("Pulau dan progres belajar telah di-reset ke awal.", "info");
+      renderAll();
+    }
+
+    // Shortcut Keyboard Lengkap untuk Pengguna PC & Laptop
+    document.addEventListener("keydown", (e) => {
+      if (e.target.tagName === "INPUT" || e.target.tagName === "TEXTAREA") return;
+
+      // Tutup modal reset dengan Escape
+      if (e.key === "Escape") {
+        closeResetModal();
+        return;
+      }
+
+      // Mute / Unmute audio dengan M
+      if (e.key === "m" || e.key === "M") {
+        toggleSound();
+        return;
+      }
+
+      // Alt + 1/2/3 untuk ganti mata pelajaran
+      if (e.altKey && ["1", "2", "3"].includes(e.key)) {
+        e.preventDefault();
+        const subjects = ["matematika", "fisika", "biologi"];
+        selectSubject(subjects[Number(e.key) - 1]);
+        return;
+      }
+
+      // Q / E untuk berpindah tab Materi Ringkas dan Latihan Soal
+      if (e.key === "q" || e.key === "Q") {
+        switchStudyMode("materi");
+        return;
+      }
+      if (e.key === "e" || e.key === "E") {
+        switchStudyMode("kuis");
+        return;
+      }
+
+      // F1 - F4 untuk membangun / upgrade bangunan pulau langsung dari keyboard PC
+      if (["F1", "F2", "F3", "F4"].includes(e.key)) {
+        e.preventDefault();
+        const bIndex = Number(e.key.replace("F", "")) - 1;
+        const targetBuilding = BUILDINGS_CONFIG[bIndex];
+        if (targetBuilding) {
+          focusBuildingCard(targetBuilding.id);
+          upgradeBuilding(targetBuilding.id);
+        }
+        return;
+      }
+
+      // Klaim materi pertama yang belum selesai dengan Enter saat di tab Materi
+      if (state.studyMode === "materi" && e.key === "Enter") {
+        const subjData = CURRICULUM_DATA[state.currentSubject];
+        const nextUnclaimed = subjData.materi.find((m) => !state.completedMateri.includes(m.id));
+        if (nextUnclaimed) {
+          claimMateriReward(nextUnclaimed.id, null);
+        }
+        return;
+      }
+
+      // Kontrol mode Latihan Soal
+      if (state.studyMode !== "kuis") return;
+
+      if (e.key === "h" || e.key === "H") {
+        useCrystalHint();
+        return;
+      }
+
+      const keyMap = { "1": 0, "2": 1, "3": 2, "4": 3, "a": 0, "A": 0, "b": 1, "B": 1, "c": 2, "C": 2, "d": 3, "D": 3 };
+      if (Object.prototype.hasOwnProperty.call(keyMap, e.key)) {
+        const idx = keyMap[e.key];
+        const optBtn = document.getElementById(`quiz-opt-${idx}`);
+        if (optBtn && !optBtn.disabled) {
+          optBtn.click();
+        }
+      } else if ((e.key === "Enter" || e.key === " ") && currentQuestionAnswered) {
+        e.preventDefault();
+        nextQuestion();
+      }
+    });
+
+    // =========================================================================
+    // 10. INISIALISASI HALAMAN
+    // =========================================================================
+    function renderAll() {
+      updateSoundIcon();
+      updateHeaderUI();
+      renderStudyArea();
+      renderIsometricIsland();
+      renderBuildingsPanel();
+    }
+
+    window.addEventListener("DOMContentLoaded", () => {
+      renderAll();
+    });
+  </script>
+</body>
+</html>
